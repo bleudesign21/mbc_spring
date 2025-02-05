@@ -1,0 +1,19 @@
+
+	// 좋아요 버튼 클릭
+	$(".like-btn").click(function(){
+		let bid = $(this).data("bid");
+		let btn = $(this);
+		
+		$.ajax({
+			url: "like.do",
+			type:"get",
+			data:{bid:bid},
+			success:function(response){
+				alert(response);
+				if(response === "success")
+				let currentLikes = parseInt(btn.text().trim().replace("♥",""));
+				btn.text("♥ "+ (currentLikes + 1));
+			},
+			error:function(){alert("좋아요 추가 실패!!");}
+		});
+	});

@@ -1,0 +1,16 @@
+create table tbl_board (
+	bid int auto_increment primary key,
+    subject varchar(100) not null,
+    contents varchar(3000) not null,
+    hit int default 0, -- 조회수
+    writer varchar(50) not null,
+    reg_date datetime default now() not null,
+    modify_date datetime default null,
+    likes int default 0 -- 좋아요
+);
+
+SELECT * FROM sample.tbl_board;
+
+select * from tbl_board
+  	order by bid desc
+    limit 0, 10;
