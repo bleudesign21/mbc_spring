@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- <mapper namespace="com.mbc.mybatis.userMapper"> -->
+<mapper namespace="com.mbc.mapper.UserMapper">
+  <!-- <select id="userList" resultType="userDTO">
+    select * from member
+  </select> -->
+  
+   <sql id="criteria">
+  <!-- 제목 검색
+     Oracle 문자열 결합 ||
+     MySQL 문자열 결합 concat()
+  -->
+     <if test="searchType == 'I'.toString()">
+        WHERE id LIKE CONCAT('%',#{keyword},'%')
+     </if>
+     <if test="searchType == 'N'.toString()">
+        WHERE name LIKE CONCAT('%',#{keyword},'%')
+     </if>
+     <if test="searchType == 'E'.toString()">
+        WHERE email LIKE CONCAT('%',#{keyword},'%')
+     </if>
+  </sql>
+  
+  <!-- 페이징 처리 -->
+  <select id="userList" resultType="userDTO">
+    select * from member
+    <include refid="criteria"></include>
+    order by uno desc
+    limit #{startIndex}, #{cntPerPage}
+  </select>
+  
+  <insert id="userInsert" parameterType="userDTO">
+  	INSERT INTO member(id, pw, name, age, email, tel)
+  	VALUES(#{id}, #{pw}, #{name}, #{age}, #{email}, #{tel})
+  </insert>
+  
+  <delete id="deleteUser" parameterType="int">
+  	DELETE FROM member WHERE uno = #{uno}
+  </delete>
+  
+  <select id="userInfo" parameterType="Integer" resultType="userDTO">
+  	SELECT * FROM member WHERE uno = #{uno}
+  </select>
+  
+  <update id="userUpdate" parameterType="userDTO">
+  	UPDATE member SET age=#{age}, email=#{email}, tel=#{tel}
+  	WHERE uno = #{uno}
+  </update>
+  
+  <select id="idCheck" resultType="userDTO">
+  	SELECT * FROM member WHERE id = #{uid}	
+  </select>
+  
+    <!-- 전체 회원 수 -->
+  <select id="totalCnt" resultType="Integer">
+  	select count(*) from member
+  	  <include refid="criteria"></include>
+  </select> 
+</mapper>
